@@ -1,7 +1,6 @@
 from datetime import date
 import pathlib
 import templates
-import urllib
 
 
 ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
