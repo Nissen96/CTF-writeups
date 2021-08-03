@@ -1,0 +1,38 @@
+---
+layout: default
+---
+
+<h1>CTF Writeups</h1>
+<br>
+
+{{ content }}
+
+{% assign ctfsByYear = site.writeups | sort: "date" | reverse | group_by_exp: "ctf", "ctf.date | date: '%Y'" %}
+{% for year in ctfsByYear %}
+{{ year.name }}
+<br>
+<ul style="padding-top: 0.3em;">
+  {% assign ctfs = year.items | group_by: "ctf" %}
+  {% for ctf in ctfs %}
+  <a href="{{ '/' | absolute_url }}writeups/{{ year.name }}/{{ ctf.name | replace: ' ', '-' }}">
+    {{ ctf.name }}
+  </a>
+
+  {% assign challs = ctf.items | where: "layout", "writeup" | sort: "title" %}
+  <ul style="padding-top: 0.1em;">
+    {% for chall in challs %}
+    <li style="line-height: 1; padding-top: 0.4em;">
+      <a href="{{ chall.url | absolute_url }}"> {{ chall.title }}</a>
+      <br>
+      <small>
+        {% include tags.html tags=chall.tags %}
+      </small>
+    </li>
+    {% endfor %}
+  </ul>
+  <br>
+  {% endfor %}
+</ul>
+
+
+{% endfor %}

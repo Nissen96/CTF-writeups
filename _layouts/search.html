@@ -1,0 +1,65 @@
+---
+layout: default
+---
+
+<h2> Search by Tag, Challenge, or CTF </h2>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">
+            <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+    </div>
+    <input id="search" type="text" class="form-control" placeholder="Enter search term" aria-label="Enter tag">
+</div>
+
+<script>
+    function search(searchTerm) {
+        $('.search-list').each((n, e) => {
+            $(e).removeClass('collapse');
+            $(e).addClass('collapse');
+        });
+
+        if (searchTerm == '')
+            return false;
+
+        $('.search-list')
+            .filter((idx, chall) => {
+                const challInfo = $(chall).data('searchable');
+                if (challInfo == '')
+                    return false;
+                return challInfo.includes(searchTerm);
+            })
+            .each((n, e) => {
+                $(e).removeClass('collapse');
+            });
+        setSizes();
+    }
+    $('#search').on('keyup', () => {
+        search($('#search').val().toLowerCase());
+    });
+    $(window).on('load', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        $('#search').val(urlParams.get('q'));
+        search($('#search').val().toLowerCase());
+    });
+</script>
+
+<div class="list-group">
+    {% assign writeups = site.writeups | where: 'layout', 'writeup' %}
+    {% for post in writeups %}
+    <a
+        href="{{ post.url | relative_url }}"
+        data-searchable="{{ post.ctf | downcase }} {{ post.title | downcase }} {{ post.tags | join: ' ' | downcase }}"
+        class="search-list list-group-item list-group-item-action flex-column align-items-start collapse"
+    >
+        <div class="d-flex justify-content-between">
+            <h6 class="mb-2">{{ post.ctf }}</h6>
+            <small class="text-muted">{{ post.date | date: '%d %B %Y' }}</small>
+        </div>
+        <h2 class="mb-2">{{ post.title }}</h2>
+        <small class="text-muted">{{ post.tags | join: ', ' }}</small>
+    </a>
+    {% endfor %}
+
+</div>

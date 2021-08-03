@@ -1,0 +1,36 @@
+{% assign ctf = page.ctf | default: page.title %}
+{% assign year = page.date | date: '%Y' %}
+
+{% if include.isSidebar %}
+<nav class="navbar navlinks">
+    <button class="navbar-toggler d-flex justify-content-between collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+        <span>{{ ctf }} Writeups</span>
+        <i style="float: right;" class="fa fa-bars menu-icon" aria-hidden="true"></i>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+        <div class="m-1 mt-2">
+{% endif %}
+            {% assign challs = site.writeups | where: "ctf", ctf | where: "layout", "writeup" %}
+            {% if challs != empty %}
+            <ul>
+                {% for chall in challs %}
+                {% capture challYear %}{{ chall.date | date: '%Y' }}{% endcapture %}
+                {% if challYear == year %}
+                <li style="line-height: 1; padding-top: 1em;">
+                    <a href="{{ chall.url | absolute_url }}"> {{ chall.title }}</a>
+                    <br>
+                    <small>{% include tags.html tags=chall.tags %}</small>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            No writeups yet
+            {% endif %}
+{% if include.isSidebar %}
+        </div>
+    </div>
+</nav>
+{% endif %}

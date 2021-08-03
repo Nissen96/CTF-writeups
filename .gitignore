@@ -1,0 +1,8 @@
+.vscode
+_site
+.sass-cache
+Gemfile.lock
+*.gem
+.jekyll-cache
+.jekyll-cache/*
+/scripts/__pycache__

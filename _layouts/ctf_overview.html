@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+<h1 class="d-flex justify-content-between">
+    <span>{{ page.ctf }}</span> <span>{{ page.date | date: '%Y'}}</span>
+</h1>
+
+{{ page.content }}
+
+<br>
+
+<h1>Writeups</h1>
+
+{% include writeup_navlinks.html %}
