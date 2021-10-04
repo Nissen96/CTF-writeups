@@ -66,7 +66,7 @@ We can exploit this vulnerability in the given scheme. First, we can keep callin
 
 Finally, we can keep running `flag()` until only one value hasn't been returned. This value must be `k1 ^ k2 ^ flag`, and we can simply get the flag by XORing this with `k1` and `k2` we just found.
 
-This [Python script](/assets/CTFs/2021/DDC-Reunion/local_exploit.py) implements the server functionality locally and performs the entire exploit almost immediately. The main exploit function is the following:
+This [Python script]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/local_exploit.py) implements the server functionality locally and performs the entire exploit almost immediately. The main exploit function is the following:
 ```python
 def eliminate(fn):
     options = [set(range(256)) for _ in range(len(flag))]
@@ -78,4 +78,4 @@ def eliminate(fn):
 ```
 Here, we first create a list of options left for each byte in the flag. The options are stored in sets, which initially contains all possible byte values, 0-255. Then we enter into a loop, where we call a function `fn` (either `enc1()`, `enc2()`, or `flag()`) which returns a byte string. We go through each byte and remove it from the list of options for the correspodning byte in `options`. We continue running the `while`-loop until just a single option remains for each byte. This *must* then be the correct byte for that position, and we join the bytes and return the result.
 
-Finding `k1`, `k2`, and the actual flag on the server takes some time, as each request eliminates at most one of the 256 possibilities per byte, so for several thousand requests must be sent. The real exploit script can be downloaded [here](/assets/CTFs/2021/DDC-Reunion/local_exploit.py). It works in the exact same way as the local script, there is just more IO-functionality.
+Finding `k1`, `k2`, and the actual flag on the server takes some time, as each request eliminates at most one of the 256 possibilities per byte, so for several thousand requests must be sent. The real exploit script can be downloaded [here]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/local_exploit.py). It works in the exact same way as the local script, there is just more IO-functionality.

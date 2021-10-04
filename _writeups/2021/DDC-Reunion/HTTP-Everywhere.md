@@ -24,8 +24,8 @@ description: |-
 
 ## Introduction
 
-We start by downloading the [packet capture](/assets/CTFs/2021/DDC-Reunion/trace.pcapng) and open it in Wireshark to inspect the captured traffic:
-![Wireshark overview](/assets/CTFs/2021/DDC-Reunion/wireshark-overview.png)
+We start by downloading the [packet capture]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/trace.pcapng) and open it in Wireshark to inspect the captured traffic:
+![Wireshark overview]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-overview.png)
 
 ## Recon
 
@@ -35,7 +35,7 @@ The file contains many frames (3990) sent between a main client (172.21.78.63) a
 
 To get an overview of the message types, we can inspect the protocol hierarchy under "Statistics -> Protocol Hierarchy":
 
-![Wireshark protocols](/assets/CTFs/2021/DDC-Reunion/wireshark-protocols.png)
+![Wireshark protocols]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-protocols.png)
 
 We see some UDP traffic, including standard DNS requests, but most packets have been sent with TCP and most of this is unencrypted HTTP data. We also see some SMTP traffic, used for e-mails, and some encrypted TLS packets. Both the HTTP and SMTP data seem interesting and we explore those further.
 
@@ -43,7 +43,7 @@ We see some UDP traffic, including standard DNS requests, but most packets have 
 
 We start by applying the filter `http` to inspect the web requests:
 
-![Wireshark HTTP data](/assets/CTFs/2021/DDC-Reunion/wireshark-http.png)
+![Wireshark HTTP data]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-http.png)
 
 We see the client has visited many interesting websites, including docs on "SSL howto" and searches for "fair-trade ssl certificates", "does it actually matter if i use tls?", and "free ssl certificates online oh boy" (last search on search.disney.com :smile:). Clearly a very security-minded individual...
 
@@ -53,7 +53,7 @@ Following these requests, most of the rest are basically just meme sites and lot
 
 To inspect the mail traffic, we filter on `smtp`:
 
-![Wireshark SMTP data](/assets/CTFs/2021/DDC-Reunion/wireshark-smtp.png)
+![Wireshark SMTP data]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-smtp.png)
 
 We see a single email sent using SMTP, and we can right-click any of the packets and choose "Follow -> TCP Stream" to see the entire communication. Focusing on just the message itself, we have:
 
@@ -131,7 +131,7 @@ So apparently, the client is called Till S. Eksbert (which he obviously is - a T
 
 It is now time to look more into the encrypted HTTPS data, which we can't yet read. The challenge text mentions all the unencrypted data and asks us "Can you increase this metric on localhost?", so we are seemingly supposed to decrypt some encrypted data sent on localhost. We can find all encrypted TLS packets sent on localhost by applying the filter `tls && ip.addr == 127.0.0.1`. Here we find just a single TLS communication stream with the initial setup and handshake, followed by a few packets of application data:
 
-![Wireshark TLS Stream](/assets/CTFs/2021/DDC-Reunion/wireshark-tls.png)
+![Wireshark TLS Stream]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-tls.png)
 
 ## Exploit
 
@@ -139,15 +139,15 @@ We have now done all the necessary recon work and are ready to combine it all. W
 
 Wireshark handles this decryption for us if we provide the key file. We do this under "Edit -> Preferences -> RSA Keys -> Add new keyfile...", where we upload the private key we saved earlier:
 
-![Wireshark RSA Key Upload](/assets/CTFs/2021/DDC-Reunion/wireshark-key.png)
+![Wireshark RSA Key Upload]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-key.png)
 
 Now click "OK" and click "Reload this file" in the top bar to update the file. Wireshark will try to use the key file to decrypt all TLS traffic and will automatically show the decrypted packets if it succeeds. Looking at the previously encrypted localhost data, we see Wireshark has successfully decrypted the data for us:
 
-![Wireshark Decrypted Data](/assets/CTFs/2021/DDC-Reunion/wireshark-decrypted.png)
+![Wireshark Decrypted Data]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-decrypted.png)
 
 We can now see the traffic was actually HTTPS, and we can inspect the underlying HTTP data. This is simply a request to `/`, followed by a `200 OK` response with the following data `text/html` data:
 
-![Wireshark HTTP response](/assets/CTFs/2021/DDC-Reunion/wireshark-https.png)
+![Wireshark HTTP response]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-https.png)
 
 We got our flag!
 

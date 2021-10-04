@@ -216,4 +216,4 @@ We see the conversation is about registering a team for a CTF and "CryptogangFTW
 
     HKN{AES_i5_n0t_vu1n_t0_kn0wn-pl4int3xt_4tt4ck}
 
-The entire decryption script can be downloaded [here](/assets/CTFs/2021/DDC-Reunion/decrypt.py).
+The entire decryption script can be downloaded [here]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/decrypt.py).
