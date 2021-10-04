@@ -47,7 +47,7 @@ We start by applying the filter `http` to inspect the web requests:
 
 We see the client has visited many interesting websites, including docs on "SSL howto" and searches for "fair-trade ssl certificates", "does it actually matter if i use tls?", and "free ssl certificates online oh boy" (last search on search.disney.com :smile:). Clearly a very security-minded individual...
 
-Following these requests, most of the rest are basically just meme sites and lots of requests for JPEGs, GIFs, MP4, etc. Some of these could potentially be interesting (and can be extracted under "File -> Export Objects -> HTTP..."), but seems to just be some bored guy browsing the internet. Instead, we continue the recon by checking the mail requests.
+Following these requests, most of the rest are basically just meme sites and lots of requests for JPEGs, GIFs, MP4, etc. Some of these could potentially be interesting (and can be extracted under "File -> Export Objects -> HTTP..."), but it mostly seems to be some bored guy browsing the internet. Instead, we continue the recon by checking the mail requests.
 
 ### SMTP
 

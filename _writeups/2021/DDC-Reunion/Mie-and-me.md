@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
 The script takes a 64-byte `key`, a `mode` (encrypt/decrypt), and a piece of `plaintext`. Choosing "encrypt", `plaintext` is encrypted with `key` and the result base64 encoded. Choosing "decrypt", `plaintext` (here the ciphertext) is passed as base64 and first decoded before decrypting with `key`. 
 
-Let's take a closer slook at the encryption function:
+Let's take a closer look at the encryption function:
 
 ```python
 def encrypt(plaintext: bytes, key: bytes) -> (bytes, bytes):
@@ -129,7 +129,7 @@ After 8 rounds, the block should be encrypted. This is done for each block, and 
 
 ## Vulnerability
 
-Let's take a closer look at the encryption function and run a block `B = L + R` through it, noting how the two halves of the block are updated throughout the rounds:
+Let's try understanding the encryption function a bit better by running a block `B = L + R` through it, noting how the two halves of the block are updated throughout the rounds:
 
 | i | L                                | R                                 |
 |:--|:---------------------------------|:----------------------------------|
