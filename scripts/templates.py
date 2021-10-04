@@ -16,4 +16,14 @@ date: {5}
 description: |-
     
 ---
+<details>
+    <summary>tl;dr</summary>
+    
+</details>
+
+***
+
+## Introduction
+
+
 '''
