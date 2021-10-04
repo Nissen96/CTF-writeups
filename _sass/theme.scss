@@ -92,10 +92,11 @@ footer {
 }
 
 #content, #comments {
-  width: 80%;
+  width: 75%;
   overflow-y: overlay;
   margin-top: 50px;
   float: right;
+  max-width: 100%;
 }
 
 #header h1 {
@@ -455,10 +456,6 @@ code {
   font-size: 18px;
   color: #aa759f;
   border-radius: 2px;
-}
-
-pre {
-  max-height: 400px;
 }
 
 .fa {
