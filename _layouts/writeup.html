@@ -30,7 +30,7 @@ layout: default
 
 {{ content }}
 
-<div id="share-links">
+<div id="tags">
   <span id="divider-line">____</span>
   <br><br>
   <small>{{ page.date | date: "%-d %B %Y" }}</small>
@@ -40,23 +40,4 @@ layout: default
   </div>
   {% endif %}
   <br>
-
-  {% assign url = page.url | absolute_url %}
-  {% capture text %}Writeup for the challenge {{ page.title }} from {{ page.ctf }}{% endcapture %}
-  {% capture tags %}ctf,writeup,{{ page.slug }},{{ page.ctf }},{{ page.tags | join: "," }}{% endcapture %}
-  {% assign hashtags = tags | replace: "-", "," | replace: " ", "," | split: "," | uniq | join: "," %}
-  {% capture windowOptions %}width=650,height=350,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,directories=no,status=no{% endcapture %}
-
-  Share this writeup:&nbsp;
-  <a href="javascript:void(window.open('https://www.facebook.com/sharer/sharer.php?u={{ url }}','Windows','{{ windowOptions }}'))">
-    <i class="fa fa-facebook-official" aria-hidden="true"></i>
-  </a>
-  &nbsp;
-  <a href="javascript:void(window.open('https://twitter.com/intent/tweet?url={{ url }}&text={{ text }}&hashtags={{ hashtags }}','Windows','{{ windowOptions }}'))">
-    <i class="fa fa-twitter" aria-hidden="true"></i>
-  </a>
-  &nbsp;
-  <a href="javascript:void(window.open('https://www.linkedin.com/sharing/share-offsite/?url={{ url }}&text={{ text }}','Windows','{{ windowOptions }}'))">
-    <i class="fa fa-linkedin" aria-hidden="true"></i>
-  </a>
 </div>
