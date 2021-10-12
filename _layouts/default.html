@@ -50,7 +50,7 @@
         <a id="a-title" href="{{ '/' | relative_url }}">
           <h1>{{ site.title | default: site.github.repository_name }}</h1>
         </a>
-        <div id="search-sidebar" class="w-100 text-center mb-3">
+        <div id="search" class="w-100 text-center">
           <a href="{{ '/' | relative_url }}search">
             <i class="fa fa-lg fa-search"></i>
           </a>
@@ -59,12 +59,6 @@
 
       {% if page.layout == 'writeup' %}
       {% include writeup_navlinks.html isSidebar=true %}
-      {% else %}
-      <div id="search-header" class="w-100 text-center">
-        <a href="{{ '/' | relative_url }}search">
-          <i class="fa fa-lg fa-search"></i>
-        </a>
-      </div>
       {% endif %}
 
       <div id="bottom-bar">
@@ -112,14 +106,10 @@
 
     function setSizes() {
       if ($(window).width() < 960) {
-        $('#search-sidebar').hide();
-        $('#search-header').show();
         $('#bottom-bar').hide();
         $('#navbarSupportedContent').css('max-height', 'unset');
         $('.navbar-collapse').collapse('hide');
       } else {
-        $('#search-header').hide();
-        $('#search-sidebar').show();
         $('#bottom-bar').show();
         $('.navbar-collapse').collapse('show');
         $('#navbarSupportedContent').css('max-height', (document.body.clientHeight - $('.title-container').outerHeight() - $('#bottom-bar').outerHeight() - $('.navbar-toggler').outerHeight() - 50));
