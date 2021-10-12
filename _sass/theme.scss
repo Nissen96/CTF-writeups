@@ -77,16 +77,6 @@ li {
   margin: 0 0 40px 0;
 }
 
-footer {
-  display: none;
-  position: fixed;
-  background: #000;
-  width: 25%;
-  text-align: center;
-  bottom: 0px;
-  float: left;
-}
-
 #bottom-bar {
   display: none;
 }
@@ -520,10 +510,6 @@ code {
   #header {
     position: unset;
     height: auto;
-  }
-
-  footer {
-    width: 100%;
   }
 
   #header, #content, #comments {

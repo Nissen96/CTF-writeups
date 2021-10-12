@@ -6,22 +6,17 @@ google_site_verification_content:
 
 #Usernames and badges
 htb_badge_no:
-thm_badge_no:
-show_thm_htb_badges_in_nav: false
+thm_badge_no: 428409
+show_thm_htb_badges_in_nav: true
 github_username: Nissen96
 gitlab:
 medium:
-stackoverflow:
+stackoverflow_id: 6415512
 hacker_news:
 linkedin: 
 twitch:
-youtube:
-twitter: 
-facebook:
-instagram:
+twitter: Nissen_96
 reddit:
-pinterest:
-telegram:
 steam:
 
 markdown: kramdown

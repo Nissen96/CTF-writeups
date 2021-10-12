@@ -50,10 +50,21 @@
         <a id="a-title" href="{{ '/' | relative_url }}">
           <h1>{{ site.title | default: site.github.repository_name }}</h1>
         </a>
+        <div id="search-sidebar" class="w-100 text-center mb-3">
+          <a href="{{ '/' | relative_url }}search">
+            <i class="fa fa-lg fa-search"></i>
+          </a>
+        </div>
       </div>
 
       {% if page.layout == 'writeup' %}
       {% include writeup_navlinks.html isSidebar=true %}
+      {% else %}
+      <div id="search-header" class="w-100 text-center">
+        <a href="{{ '/' | relative_url }}search">
+          <i class="fa fa-lg fa-search"></i>
+        </a>
+      </div>
       {% endif %}
 
       <div id="bottom-bar">
@@ -67,10 +78,6 @@
       {% include anchor_headings.html anchorClass='anchor' h_max=2 html=content anchorBody="<i class='fa fa-link' aria-hidden='true'></i>" %}
     </section>
   </div>
-
-  <footer>
-    {% include social_links.html %}
-  </footer>
 
   <script src="{{ '/assets/js/prism.js' | absolute_url }}"></script>
   <button onclick="topFunction()" class="fa fa-arrow-up" id="top" title="Go to top"></button>
@@ -105,17 +112,16 @@
 
     function setSizes() {
       if ($(window).width() < 960) {
+        $('#search-sidebar').hide();
+        $('#search-header').show();
         $('#bottom-bar').hide();
-        $('footer').show();
         $('#navbarSupportedContent').css('max-height', 'unset');
         $('.navbar-collapse').collapse('hide');
-        $('footer').css("position", "fixed");
-      }
-      else {
+      } else {
+        $('#search-header').hide();
+        $('#search-sidebar').show();
         $('#bottom-bar').show();
-        $('footer').hide();
         $('.navbar-collapse').collapse('show');
-        $('footer').css("position", "fixed");
         $('#navbarSupportedContent').css('max-height', (document.body.clientHeight - $('.title-container').outerHeight() - $('#bottom-bar').outerHeight() - $('.navbar-toggler').outerHeight() - 50));
       }
     }

@@ -1,7 +1,4 @@
 <div class="social d-flex flex-column justify-content-center w-100">
-    <a href="{{ '/' | relative_url }}search" class="text-center w-100 mt-3 mb-2">
-      <i class="fa fa-sm fa-search"></i>
-    </a>
     <div class="social-links-bar d-flex justify-content-center mb-2">
         {% if site.facebook %}
         <a href="https://facebook.com/{{ site.facebook }}" target="_blank" rel="noopener"></a>
@@ -22,11 +19,6 @@
             <i class="fa fa-lg fa-hacker-news" aria-hidden="true"></i>
         </a>
         {% endif %}
-        {% if site.instagram %}
-        <a href="https://instagram.com/{{ site.instagram }}" target="_blank" rel="noopener">
-            <i class="fa fa-lg fa-instagram" aria-hidden="true"></i>
-        </a>
-        {% endif %}
         {% if site.linkedin %}
         <a href="https://linkedin.com/in/{{ site.linkedin }}" target="_blank" rel="noopener">
             <i class="fa fa-lg fa-linkedin" aria-hidden="true"></i>
@@ -37,13 +29,8 @@
             <i class="fa fa-lg fa-medium" aria-hidden="true"></i>
         </a>
         {% endif %}
-        {% if site.pinterest %}
-        <a href="https://pinterest.com/{{ site.pinterest }}" target="_blank" rel="noopener">
-            <i class="fa fa-lg fa-pinterest" aria-hidden="true"></i>
-        </a>
-        {% endif %}
-        {% if site.stackoverflow %}
-        <a href="https://stackoverflow.com/{{ site.stackoverflow }}" target="_blank" rel="noopener">
+        {% if site.stackoverflow_id %}
+        <a href="https://stackoverflow.com/users/{{ site.stackoverflow_id }}" target="_blank" rel="noopener">
             <i class="fa fa-lg fa-stack-overflow" aria-hidden="true"></i>
         </a>
         {% endif %}
@@ -65,11 +52,6 @@
         {% if site.steam %}
         <a href="https://steamcommunity.com/id/{{ site.steam }}" target="_blank" rel="noopener">
             <i class="fa fa-lg fa-steam" aria-hidden="true"></i>
-        </a>
-        {% endif %}
-        {% if site.telegram %}
-        <a href="https://t.me/{{ site.telegram }}" target="_blank" rel="noopener">
-            <i class="fa fa-lg fa-telegram" aria-hidden="true"></i>
         </a>
         {% endif %}
         {% if site.youtube %}
