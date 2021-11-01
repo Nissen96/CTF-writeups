@@ -461,15 +461,6 @@ code {
   font-size: smaller;
 }
 
-#desc_show {
-  display: inline;
-  cursor: pointer;
-  background: transparent ;
-  color: $default;
-  border: none;
-  font-size: 16px;
-}
-
 .modal .modal-dialog {
   max-width: 95%;
 }
@@ -557,8 +548,61 @@ code {
   padding: 10px;
 }
 
-#share-links {
-  width: 100%;
+details {
+  border: 1px solid #b4e85385;
+  border-radius: 5px;
+  padding: 1rem;
+  margin: 0.5rem auto;
+  max-width: 90%;
+  min-width: 300px;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none;
+  text-align: center;
+}
+
+@keyframes fadein {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+details[open] :not(summary) {
+  animation: fadein 0.5s ease-in-out;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #b4e85385;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.flag {
+  margin: 0 5px;
+  user-select: all;
+  word-wrap: break-word;
+}
+
+.end-flag {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.spoiler {
+  background: #292929;
+  color: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: background ease 0.2s, color ease 0.25s;
+}
+
+.spoiler:focus {
+  background: none;
+  color: inherit;
+  cursor: auto;
+  user-select: all;
 }
 
 ::-webkit-scrollbar {

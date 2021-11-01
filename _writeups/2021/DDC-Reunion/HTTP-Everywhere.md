@@ -12,6 +12,7 @@ description: |-
     Run `wget http://everywhere.hkn/trace.pcapng` to find a trace file with lots of unencrypted traffic.
     
     Can you increase this metric on localhost?
+flag: HKN{fj2-pS-KIo7Z}
 ---
 <details> 
     <summary>tl;dr</summary>
@@ -145,10 +146,8 @@ Now click "OK" and click "Reload this file" in the top bar to update the file. W
 
 ![Wireshark Decrypted Data]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-decrypted.png)
 
-We can now see the traffic was actually HTTPS, and we can inspect the underlying HTTP data. This is simply a request to `/`, followed by a `200 OK` response with the following data `text/html` data:
+We can now see the traffic was actually HTTPS, and we can inspect the underlying HTTP data. This is simply a request to `/`, followed by a `200 OK` response with the following `text/html` data:
 
 ![Wireshark HTTP response]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/wireshark-https.png)
 
 We got our flag!
-
-    HKN{fj2-pS-KIo7Z}

@@ -9,6 +9,7 @@ tags:
 date: 2021-10-11
 description: |-
     I found a weird stream cipher scheme. Can you break this?
+flag: pbctf{super_duper_easy_brute_forcing_actually_this_one_was_made_by_mistake}
 ---
 <details>
     <summary>tl;dr</summary>
@@ -175,12 +176,7 @@ keystream = recover_keystream(key, public)
 flag = bits_to_bytes(xor(enc, keystream))
 print(flag.decode())
 ```
-The decrypted flag is
-
-    pbctf{super_duper_easy_brute_forcing_actually_this_one_was_made_by_mistake}
-
 The full decryption script can be downloaded [here]({{ site.baseurl }}/assets/CTFs/2021/pbctf/decrypt.py).
-
 
 ## Notes
 

@@ -15,6 +15,7 @@ description: |-
     You and Mie are particapating in a CTF right now, and you know that the last message Mie sent was the flag to the first challenge.
     
     You also remember that Mie sent your team name, CryptogangFTW, not long ago.
+flag: HKN{AES_i5_n0t_vu1n_t0_kn0wn-pl4int3xt_4tt4ck}
 ---
 <details> 
     <summary>tl;dr</summary>
@@ -200,6 +201,7 @@ for cipher in ciphers:  # ciphers is the list of messages after base64 decoding
         decrypted += left + right
     print(unpad(decrypted, 16).decode())
 ```
+The entire decryption script can be downloaded [here]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/decrypt.py).
 
 This successfully decrypts all messages, so our choice of ciphertext apparently was the one produced by encrypting "CryptogangFTW":
 
@@ -213,7 +215,3 @@ This successfully decrypts all messages, so our choice of ciphertext apparently 
     Mie > HKN{AES_i5_n0t_vu1n_t0_kn0wn-pl4int3xt_4tt4ck}
 
 We see the conversation is about registering a team for a CTF and "CryptogangFTW" was their team name. The other ciphertext candidate was their password. We get the flag, which seems to hint at using a cryptosystem that is *not* vulnerable to a known-plaintext attack, such as AES:
-
-    HKN{AES_i5_n0t_vu1n_t0_kn0wn-pl4int3xt_4tt4ck}
-
-The entire decryption script can be downloaded [here]({{ site.baseurl }}/assets/CTFs/2021/DDC-Reunion/decrypt.py).
