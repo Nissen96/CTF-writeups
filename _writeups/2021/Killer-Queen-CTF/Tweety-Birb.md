@@ -21,7 +21,7 @@ flag: kqctf{tweet_tweet_did_you_leak_or_bruteforce_..._plz_dont_say_you_tried_br
 ## Introduction
 
 We are given a binary with the following main function
-```clike
+```c
 int main(void) {
     char buffer [72];
     long canary = *(long *)(in_FS_OFFSET + 0x28);

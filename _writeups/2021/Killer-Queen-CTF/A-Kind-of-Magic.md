@@ -26,7 +26,7 @@ That it is 10 is interesting, since this is the ASCII value of a newline - so it
 
 Looking into the code in Cutter and decompiling, it looks fairly simple:
 
-```clike=
+```c
 main(int argc, char **argv)
 {
     char **var_40h;
