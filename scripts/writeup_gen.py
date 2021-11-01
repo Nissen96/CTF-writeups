@@ -43,7 +43,7 @@ def create_ctf_index(ctf_name):
         ))
 
 
-def create_chall(ctf_name, chall_name, points, solves, tags):
+def create_chall(ctf_name, chall_name, points, solves, tags, flag):
     tag_list = tags.replace(", ", ",").split(",")
     formatted_tags = "".join([f"\n    - {tag}" for tag in tag_list])
     
@@ -57,7 +57,8 @@ def create_chall(ctf_name, chall_name, points, solves, tags):
             points,
             solves,
             formatted_tags,
-            date.today()
+            date.today(),
+            flag
         ))
 
 
@@ -66,12 +67,15 @@ def main():
     create_ctf_index(ctf_name)
     
     while True:
-        chall_name = input('Enter chall name: ')
-        points = input('Enter points: ')
-        solves = input('Enter no. of solves: ')
-        tags = input('Enter chall tags (comma-separated): ')
-        create_chall(ctf_name, chall_name, points, solves, tags)
-        if input('Add another chall? (y/N): ') != 'y':
+        print('\n New challenge\n---------------')
+        chall_name = input('Title: ')
+        points = input('Points: ')
+        solves = input('Solves: ')
+        tags = input('Tags (comma-separated): ')
+        flag = input('Flag: ')
+        create_chall(ctf_name, chall_name, points, solves, tags, flag)
+        print("*** Challenge added ***\n")
+        if input('Add another challenge? (y/N): ') != 'y':
             break
 
 

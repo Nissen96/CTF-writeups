@@ -461,15 +461,6 @@ code {
   font-size: smaller;
 }
 
-#desc_show {
-  display: inline;
-  cursor: pointer;
-  background: transparent ;
-  color: $default;
-  border: none;
-  font-size: 16px;
-}
-
 .modal .modal-dialog {
   max-width: 95%;
 }
@@ -557,8 +548,30 @@ code {
   padding: 10px;
 }
 
-#share-links {
-  width: 100%;
+.flag {
+  margin: 0 5px;
+  user-select: all;
+  word-wrap: break-word;
+}
+
+.end-flag {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.spoiler {
+  background: #292929;
+  color: transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: background ease 0.2s, color ease 0.25s;
+}
+
+.spoiler:focus {
+  background: none;
+  color: inherit;
+  cursor: auto;
+  user-select: all;
 }
 
 ::-webkit-scrollbar {

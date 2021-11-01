@@ -12,23 +12,26 @@ layout: default
 </h1>
 
 {% if page.description != "" %}
-<div id="desc_modal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-body">
-        {{ page.description | markdownify }}
-      </div>
-    </div>
-  </div>
-</div>
-<h4>Challenge Description:
-  <button id="desc_show" role="button" data-toggle="modal" data-target="#desc_modal" class="fa fa-eye"
-    aria-hidden="true">
-  </button>
-</h4>
+{{ page.description | markdownify }}
 {% endif %}
 
+{% if page.flag %}
+<h4>
+  <i class="fa fa-flag"></i>
+  <span class="spoiler flag" tabindex="0">{{ page.flag }}</span>
+</h4>
+{% endif %}
+<hr>
+
 {{ content }}
+
+{% if page.flag %}
+<h3 class="end-flag">
+  <i class="fa fa-flag"></i>
+  <span class="flag">{{ page.flag }}</span>
+  <i class="fa fa-flag"></i>
+</h3>
+{% endif %}
 
 <div id="tags">
   <span id="divider-line">____</span>

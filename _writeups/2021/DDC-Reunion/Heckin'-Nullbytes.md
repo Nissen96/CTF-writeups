@@ -9,6 +9,7 @@ tags:
 date: 2021-10-04
 description: |-
     break the heckin scheme my friend: heckin-nullbytes.hkn:9001
+flag: 
 ---
 <details> 
     <summary>tl;dr</summary>
