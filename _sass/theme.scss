@@ -548,6 +548,37 @@ code {
   padding: 10px;
 }
 
+details {
+  border: 1px solid #b4e85385;
+  border-radius: 5px;
+  padding: 1rem;
+  margin: 0.5rem auto;
+  max-width: 90%;
+  min-width: 300px;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none;
+  text-align: center;
+}
+
+@keyframes fadein {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+details[open] :not(summary) {
+  animation: fadein 0.5s ease-in-out;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #b4e85385;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
 .flag {
   margin: 0 5px;
   user-select: all;
