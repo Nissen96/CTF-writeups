@@ -24,3 +24,9 @@ The site is running [here](https://Nissen96.github.io)
 1. Open a new terminal window in VS Code
 2. Run `python scripts/writeup_gen.py` and fill in the details. The script generates the required writeup files and asset directory for the CTF
 3. Write the writeups in markdown and push the commits to your repo
+
+To preview changes locally:
+
+1. Run `gem install bundler` and `bundle install` once to install dependencies
+2. Run `bundle exec jekyll serve` to start a preview server with hot reloading
+3. Visit [`localhost:4000`](http://localhost:4000)` to preview changes.
