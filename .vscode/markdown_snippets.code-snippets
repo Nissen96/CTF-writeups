@@ -1,12 +1,12 @@
 {
 	"Bash Prompt with download": {
 		"prefix": ["cmdbashdown"],
-		"body": "<pre data-src=\"${1:file_name}\" \n\tdata-download-link \n\tdata-download-link-label=\"get_app\" \n\tclass=\"command-line\" \n\tdata-prompt=\"${2:username}@${3:host} ${4:prompt}\" \n\tdata-output=\"${5:lines_to_remove}\"\n><code class=\"language-bash\">${6:code}</code>\n</pre>",
+		"body": "<pre data-src=\"${1:file_name}\"\n\tdata-download-link\n\tdata-download-link-label=\"get_app\" \n\tclass=\"command-line\" \n\tdata-prompt=\"${2:username}@${3:host} ${4:prompt}\" \n\tdata-output=\"${5:lines_to_remove}\"\n><code class=\"language-bash\">${6:code}</code>\n</pre>",
 		"description": "To add a code block with bash prompt and download"
 	},
 	"Bash Prompt": {
 		"prefix": ["cmdbash"],
-		"body": "<pre \n\tclass=\"command-line\" \n\tdata-prompt=\"kali@kali $\" \n\tdata-output=\"${1:lines_without_prompt}\"\n><code class=\"language-bash\">${2:code}</code>\n</pre>",
+		"body": "<pre \n\tclass=\"command-line\"\n\tdata-user=\"kali\"\n\tdata-host=\"kali\"\n\tdata-output=\"${1:lines_without_prompt}\"\n><code class=\"language-bash\">${2:code}</code>\n</pre>",
 		"description": "To add a code block with bash prompt"
 	},
 	"Other Prompt with download": {

