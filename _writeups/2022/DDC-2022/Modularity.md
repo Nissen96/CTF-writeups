@@ -112,7 +112,7 @@ For at dekryptere flaget, skal vi gøre to ting:
 
 ### Password
 
-Passwordet bruges som seed, og seedet afgør, hvilke tilfældige tal `random.randint()` returner. Vi har derfor brug at kende passwordet, der blev brugt til kryptering af flaget, så vi får de samme tilfældige tal til vores dekryptering.
+Passwordet bruges som seed, og seedet afgør, hvilke tilfældige tal `random.randint()` returner. Vi har derfor brug for at kende passwordet, der blev brugt til kryptering af flaget, så vi får de samme tilfældige tal til vores dekryptering.
 
 Vi er så heldige, at passwordet kun består af fire cifre, så det kan bruteforces relativt hurtigt. Dvs. når vi har skrevet dekrypteringskoden, kan vi forsøge at køre den på vores ciphertext med alle de 10000 mulige passwords og tjekke, om resultatet bliver en bytestring, der starter med `DDC{`.
 
@@ -125,7 +125,7 @@ for i in range(10000):
     decrypted = decrypt(ciphertext, pw)
     plaintext = int.to_bytes(decrypted, (decrypted.bit_length() + 7) // 8, 'big')
     
-    if plaintext.startswith(b"DDC"):
+    if plaintext.startswith(b"DDC{"):
         print(f"Password: {pw}")
         print(f"Flag: {plaintext.decode()}")
         break
@@ -135,7 +135,7 @@ for i in range(10000):
 
 For at dekryptere flaget skal vi reverse krypteringskoden, så vi får en dekrypteringsfunktion, der gør det præcis modsatte af krypteringen. Til det skal vi finde den inverse funktion af krypteringsfunktionen vi så tidligere, og så anvende den 128 gange på ciphertexten.
 
-Vi har også brug for de samme tilfældige tal, som nu skal bruges i omvendt rækkefølge. Den del kan vi håndtere ved først bare at generere alle de samme tal og så poppe dem fra listens slutning i hver runde:
+Vi har også brug for de samme tilfældige tal, som nu skal bruges i omvendt rækkefølge. Den del kan vi håndtere ved at generere alle de samme tal og så poppe dem fra listens slutning i hver runde:
 ```python
 def decrypt(ciphertext, pw):
     random.seed(pw)
@@ -162,7 +162,7 @@ Det sidste vi mangler er også hoveddelen i opgaven: at invertere funktionen
 
 $$ enc(e) = (e \cdot a + b)^{c} \mod p $$
 
-Vi har altså brug for at finde ud af, hvordan vi går fra $$enc(e)$$ til $$e$$. Vi kan se, at inputtet først ganges med $$a$$, herefter lægges $$b$$ til, og så opløftes det hele i $$c$$. Alt det gøres modulo $$p$$. Hvis det ikke blev gjort modulo $$p$$ ville funktionen være enkel at invertere:
+Vi har altså brug for at finde ud af, hvordan vi går fra $$enc(e)$$ tilbage til $$e$$. Vi kan se, at inputtet først ganges med $$a$$, herefter lægges $$b$$ til, og så opløftes det hele i $$c$$. Alt det gøres modulo $$p$$. Hvis det ikke blev gjort modulo $$p$$ ville funktionen være enkel at invertere:
 
 $$ enc(e) = (e \cdot a + b)^{c} $$
 
@@ -182,7 +182,7 @@ Vi skal altså finde ud af, hvordan vi får inverteret de tre operationer, der u
 
 #### Modulær multiplikation
 
-Vi arbejder her med heltal modulo $$p$$, og her er den modsatte operation af multiplikation ikke division, som vi normalt kender det. Det gælder altså ikke at
+Vi arbejder her med heltal modulo $$p$$, og her er den modsatte operation af multiplikation ikke division, som vi normalt kender det. Det gælder altså *ikke* at
 
 $$ y \equiv x \cdot a \mod p \quad \Leftrightarrow \quad \frac{y}{a} \equiv x \mod p $$
 
@@ -194,17 +194,17 @@ og $$a^{-1}$$ er det tal, der giver $$1$$, når vi ganger det med $$a$$:
 
 $$ a \cdot a^{-1} = 1 $$
 
-Det er samme princip vi bruger i modulær aritmetik. Her vil (nogle) tal `a` have en "modulær multiplikativ invers" `a^{-1}`, som ligesom før er det tal, der sikrer at
+Det er samme princip vi bruger i modulær aritmetik. Her vil (nogle) tal $$a$$ have en *modulær multiplikativ invers*, $$a^{-1}$$, som ligesom før er det tal, der sikrer at
 
 $$ a \cdot a^{-1} \equiv 1 \mod p $$
 
-For altså at komme fra $$x \cdot a \mod p$$ til $$x$$, skal vi finde $$a$$s modulære multiplikative inverse modulo $$p$$ og gange med den, da
+For altså at komme fra $$x \cdot a \mod p$$ til $$x$$, skal vi finde $$a$$s modulære multiplikative invers modulo $$p$$ og gange med den, da
 
 $$ x \cdot a \cdot a^{-1} \equiv x \cdot 1 \equiv x \mod p $$
 
-Hvordan finder vi den? Til det kan vi bruge *Euklids udvidede algorithme*. Forklaringen bliver lidt teknisk og kan evt. skippes, men i Python er det meget nemt: Det er indbygget i `pow` funktionen, så for at finde $$a^{-1} \mod p$$ kan du bare bruge `pow(a, -1, p)`.
+Hvordan finder vi den? Til det kan vi bruge *Euklids udvidede algoritme*. Forklaringen bliver lidt teknisk og kan evt. skippes, men i Python er det meget nemt: Det er indbygget i `pow` funktionen, så for at finde $$a^{-1} \mod p$$ kan du bruge `pow(a, -1, p)`.
 
-Forklaring: Euklids algoritme finder den største fælles divisor (`gcd` - greatest common divisor) for to tal, $$gcd(x, y)$$. Det er det største tal, der går op i både $$x$$ og $$y$$. Hvis det tal er $$1$$, er der altså ingen tal (udover $$1$$), der går op i begge tal, og så kaldes de *indbyrdes primiske* (co-prime). Bruger man Euklids *udvidede* algoritme får man samtidig de to tal $$u$$ og $$v$$, der gør at
+Teknisk forklaring: Euklids algoritme finder den største fælles divisor (`gcd` - greatest common divisor) for to tal, $$gcd(x, y)$$. Det er det største tal, der går op i både $$x$$ og $$y$$. Hvis det tal er $$1$$, er der altså ingen tal (udover $$1$$), der går op i begge tal, og så kaldes de *indbyrdes primiske* (co-prime). Bruger man Euklids *udvidede* algoritme får man samtidig de to tal $$u$$ og $$v$$, der gør at
 
 $$ u \cdot x + v \cdot y = gcd(x, y) $$
 
@@ -226,7 +226,7 @@ $$ a \cdot a^{-1} + q \cdot p = 1 $$
 
 Hvis vi bruger Euklids udvidede algoritme til at finde $$gcd(a, p)$$ og hvis det viser sig at $$gcd(a, p) = 1$$, får vi altså som output præcis de to tal $$a^{-1}$$ og $$q$$, der får ligningen til at gå op (her er vi ligeglade med $$q$$). Det virker kun, hvis $$gcd(a, p) = 1$$ -- ellers er den inverse udefineret og findes ikke for det $$a$$.
 
-I vores tilfælde er $$p$$ er primtal, og det er altså indbyrde primisk med alle tal, der ikke indeholder $$p$$ som en faktor. Det gælder for alle tal $$a$$ i opgaven, så vi vil altid have $$gcd(a, p) = 1$$ og kan finde den inverse med Euklids udvidede algoritme (indbygget i Python's `pow` funktion).
+I vores tilfælde er $$p$$ et primtal, og det er altså indbyrdes primisk med alle tal, der ikke indeholder $$p$$ som en faktor. Det gælder for alle tal $$a$$ i opgaven, så vi vil altid have $$gcd(a, p) = 1$$ og kan finde den inverse med Euklids udvidede algoritme (indbygget i Python's `pow` funktion).
 
 
 #### Modulær addition
@@ -239,19 +239,19 @@ Den mest komplekse operation af de tre er modulær eksponentiering, men en stor 
 
 $$ x^c \mod n $$
 
-så kan vi invertere den operation ved at opløfte udtrykket i den multiplikative inverse af $$c$$ modulo $$\phi(n)$$, altså det tal $$d$$ som sikrer at
+så kan vi invertere den operation ved at opløfte udtrykket i $$c$$s invers modulo $$\phi(n)$$, altså det tal $$d$$ som sikrer at
 
 $$ c \cdot d \equiv 1 \mod \phi(n) $$
 
-Hvis ovenstående gælder, og vi opløfter det oprindelige udtryk i `d`, får vi
+Hvis ovenstående gælder, og vi opløfter det oprindelige udtryk i $$d$$, får vi
 
-$$ (x^c)^d \equiv x^(c \cdot d) \equiv x^1 \equiv x \mod n $$
+$$ (x^c)^d \equiv x^{(c \cdot d)} \equiv x^1 \equiv x \mod n $$
 
-Som vi så ved modulær multiplikation, er det et krav, at $$gcd(c, \phi(n)) = 1$$, ellers eksisterer denne inverse ikke. Måske du undrer dig over, hvor $$\phi(n)$$ kommer fra. Det forklares senere til de interesserede, men for et primtal gælder, at $$\phi(p) = p - 1$$. Så i vores tilfælde, hvor vi har
+Som vi så ved modulær multiplikation, er det et krav, at $$gcd(c, \phi(n)) = 1$$, ellers eksisterer denne inverse ikke. Måske du undrer dig over, hvor $$\phi(n)$$ pludselig kommer fra. Det forklares om lidt til de interesserede, men for et primtal gælder, at $$\phi(p) = p - 1$$. Så i vores tilfælde, hvor vi har
 
 $$ x^c \mod p $$
 
-kan denne operation inverteres ved at finde $$c$$s multiplikative invers modulo $$\phi(p) = p - 1$$ (lad os kalde den $$d$$) og opløfte udtrykket i det tal, altså:
+kan denne operation inverteres ved at finde $$c$$s invers modulo $$\phi(p) = p - 1$$ (lad os kalde den $$d$$) og opløfte udtrykket i det tal, altså:
 
 ```python
 d = pow(c, -1, p - 1)  # cs multiplikative invers modulo phi(p)
@@ -259,7 +259,7 @@ inverted = pow(x, d, p)
 ```
 Skip til næste overskrift, hvis du er ligeglad med, hvorfor det virker - altså hvorfor lige præcis denne operation inverterer den oprindelige.
 
-Forklaring (lidt teknisk): $$\phi$$ kaldes Eulers totientfunktion og $$\phi(n)$$ returnerer antallet af positive heltal mindre end $$n$$, der er indbyrdes primiske med $$n$$. Hvis det er et primtal, $$p$$, er *alle* tal mindre end $$p$$ indbyrdes primiske med $$p$$, og derfor er $$\phi(p) = p - 1$$.
+Teknisk forklaring: $$\phi$$ kaldes Eulers totientfunktion, og $$\phi(n)$$ returnerer antallet af positive heltal mindre end $$n$$, der er indbyrdes primiske med $$n$$. Hvis det er et primtal, $$p$$, er *alle* tal mindre end $$p$$ indbyrdes primiske med $$p$$, og derfor er $$\phi(p) = p - 1$$.
 
 Vi skal om lidt bruge Fermats lille sætning. Den siger at
 
@@ -275,7 +275,7 @@ $$ a^{\phi(n)} \equiv 1 \mod n $$
 
 Her er Fermats lille sætning det specialtilfælde, hvor $$n$$ er et primtal, da $$\phi(p) = p - 1$$.
 
-Lad os prøve nu at bruge Euklids udvidede algoritme til at finde $$c$$s multiplikative invers modulo $$\phi(p)$$. For at vi kan det, skal $$gcd(x, \phi(p)) = 1$$. Lad os lige tjekke, at det gælder i vores opgave. Her er
+Lad os prøve nu at bruge Euklids udvidede algoritme til at finde $$c$$s invers modulo $$\phi(p)$$. For at vi kan det, skal $$gcd(x, \phi(p)) = 1$$. Lad os lige tjekke, at det gælder i vores opgave. Her er
 
 $$\phi(p) = p - 1 = 97953958723054470944201407781333999671402425802271290596631886639255617548502$$
 
@@ -289,7 +289,7 @@ $$ x \cdot 2 + y \cdot 489769793615272354721007038906669998357012129011356452983
 
 hvor $$x$$ og $$y$$ er positive heltal. Koden tjekker om `c % 2 == 0`, og hvis det er tilfældet trækker den 1 fra $$c$$. Det sikrer at $$gcd(c, p - 1) = 1$$ i alle andre tilfælde end $$c = 48976979361527235472100703890666999835701212901135645298315943319627808774251$$, som må siges at være en meget usandsynlig edge case.
 
-Så vi ved altså at $$c$$ (næsten) altid har en multiplikativ invers modulo $$p - 1$$, og vi kan finde den med Euklids udvidede algoritme, der giver os $$d$$ og $$q$$ sådan at
+Så vi ved altså at $$c$$ (næsten) altid har en invers modulo $$p - 1$$, og vi kan finde den med Euklids udvidede algoritme, der giver os $$d$$ og $$q$$ sådan at
 
 $$ c \cdot d + q \cdot (p - 1) = 1 $$
 
@@ -299,43 +299,43 @@ $$ c \cdot d + q \cdot (p - 1) = 1 \quad \Leftrightarrow \quad c \cdot d - 1 = q
 
 Nu har vi, hvad vi skal bruge for at se, hvorfor det virker at $$(x^c)^d \equiv x \mod p$$:
 
-$$ (x^c)^d \equiv x^(c \cdot d) \equiv x \cdot x^(c \cdot d - 1) \equiv x \cdot x^{q \cdot (p - 1)} \equiv x \cdot x \cdot (x^{p - 1})^q \mod p $$
+$$ (x^c)^d \equiv x^{(c \cdot d)} \equiv x \cdot x^{(c \cdot d - 1)} \equiv x \cdot x^{q \cdot (p - 1)} \equiv x \cdot (x^{p - 1})^q \mod p $$
 
 Her kan vi bruge Fermats lille sætning, der fortalte os at $$x^{p - 1} \equiv 1 \mod p$$, så vi får
 
 $$ x \cdot (x^{p - 1})^q \equiv x \cdot (1)^q \equiv x \cdot 1 \equiv x \mod p $$
 
-Det beviser, at $$(x^c)^d \equiv x \mod p$$, og derfor virker det at opløfte $$x^c \mod p$$ i $$c$$s multiplikative invers modulo $$p - 1$$.
+Det beviser, at $$(x^c)^d \equiv x \mod p$$, og derfor virker det at opløfte $$x^c \mod p$$ i $$c$$s invers modulo $$p - 1$$.
 
 **Bonus info:** Du har nu også lært på et ret teknisk og matematisk plan, hvordan RSA fungerer!
 
 Her vælges to primtal $$p$$ og $$q$$, og man finder $$n = p \cdot q$$. Herudover vælges et tal $$e$$, som sammen med $$n$$ udgør ens public key. Beskeden $$m$$ krypteres med $$c = m^e \mod n$$.
 
-Vi har nu lært, hvordan denne operation inverteres, så man kan dekryptere $$c$$: man skal finde $$e$$s multiplikative invers modulo $$\phi(n)$$. Det er ens private key, som benævnes $$d$$, og det gælder altså så at
+Vi har nu lært, hvordan denne operation inverteres, så man kan dekryptere $$c$$: man skal finde $$e$$s invers modulo $$\phi(n)$$. Det er ens private key, som benævnes $$d$$, og det gælder altså så at
 
 $$ c^d \equiv (m^e)^d \equiv m \mod n $$
 
 Årsagen og beviset er det samme som før, og sikkerheden i RSA ligger i, at ingen andre end du kender $$\phi(n)$$. Det er svært at udregne for store $$n$$, men hvis $$n = p \cdot q$$ gælder at $$\phi(n) = (p - 1) \cdot (q - 1)$$, hvilket er nemt at udregne. Så ingen andre end du må heller kende $$p$$ og $$q$$.
 
-#### Samlet
+#### Opsamling
 
-Vi har nu lært, hvordan vi inverterer alle tre operationer. Vi har igen funktionen
+Vi har nu lært, hvordan vi inverterer alle tre operationer. Vi har altså funktionen
 
 $$ enc(e) = (e \cdot a + b)^c \mod p $$
 
-og vi vil prøve at isolere $$e$$, så vi ved, hvad vi skal gøre ved $$enc(e)$$ (som vi kender) for at komme til $$e$$.
+og vi kan nu prøve at isolere $$e$$, så vi ved, hvad vi skal gøre ved $$enc(e)$$ (som vi kender) for at komme tilbage til $$e$$.
 
-Vi starter med at invertere eksponentieringen. Det ved vi nu, vi kan gøre ved at opløfte begge sider i $$c$$s multiplikative invers modulo $$p - 1$$:
+Vi starter med at invertere eksponentieringen. Det ved vi nu, vi kan gøre ved at opløfte begge sider i $$c$$s invers modulo $$p - 1$$:
 
-$$ enc(e)^{c^{-1} \mod{p - 1}} \equiv e \cdot a + b \mod p $$
+$$ enc(e)^{(c^{-1} \mod{p - 1})} \equiv e \cdot a + b \mod p $$
 
 Vi kan nu trække $$b$$ fra på begge sider:
 
-$$ enc(e)^{c^{-1} \mod{p - 1}} - b \equiv e \cdot a \mod p $$
+$$ enc(e)^{(c^{-1} \mod{p - 1})} - b \equiv e \cdot a \mod p $$
 
-og til sidst gange med $$a$$s multiplikative invers:
+og til sidst gange med $$a$$s modulære invers:
 
-$$ (enc(e)^{c^{-1} \mod{p - 1}} - b) \cdot a^{-1} \equiv e \mod p $$
+$$ (enc(e)^{(c^{-1} \mod{p - 1})} - b) \cdot a^{-1} \equiv e \mod p $$
 
 Nu har vi inverteret funktionen! I Python kode svarer de tre steps til
 ```python
@@ -348,7 +348,7 @@ som vi kan plotte ind i vores dekrypteringsfunktion
 
 ### Konklusion
 
-Vi har nu fundet ud af at invertere krypteringsfunktionen og skrevet kode til at bruteforce passwordet. Vores endelige dekrypteringsscript er
+Vi har nu fundet ud af at invertere krypteringsfunktionen og skrevet kode til at bruteforce passwordet. Vores endelige script til dekryptering er
 ```python
 import random
 
