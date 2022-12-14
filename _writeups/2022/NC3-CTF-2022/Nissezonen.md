@@ -32,7 +32,7 @@ flag: <br>nc3{1-0_over_nissedev!}<br>nc3{nissedev_er_taget_paa_juleferie}<br>nc3
 
 ***
 
-***Writeup by N1z0ku from Brunnerne***
+***Writeup by N1z0ku and Nissen***
 
 ## Enumeration
 
@@ -57,7 +57,7 @@ We also get arbitrary file write through redis, which seems like a probable atta
 
 The SSH service was attacked with password enumeration for user `admin` and `nissedev` but with no luck.
 
-Finally, we enumerated the web server where we are first presented with a default Apache page.
+Finally, visiting the the web server at port 80, we are presented with a default Apache page.
 Enumerating the website directories gives us two interesting files: `/login.php` and `/con.php`, where the latter is empty and likely just contains PHP code for database connection.
 
 ### Redis
@@ -72,7 +72,7 @@ The endpoint `/login.php` contains a simple login form:
 
 ![Login Page]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221211033801.png)
 
-Having tried a few attacks, we discovered that certain SQL keywords in the username field results in a slightly shorter response than normally. Inspecting the response, this is due to the final `</body>` and `</html>` tags missing, likely because the PHP code runs `die()` upon SQLi attempts, so there seems to be some WAF on the system. Some keywords we found to have this effect was `SELECT`, `FROM`, `UNION`, `SLEEP`, and then also space and `+`. We spent many hours trying manual attacks and `sqlmap` on the form, but with no luck.
+Having tried a few attacks, we discovered that certain SQL keywords in the username field results in a slightly shorter response than normally. Inspecting the response, this is due to the final `</body>` and `</html>` tags missing, likely because the PHP code runs `die()` upon SQLi attempts, so there seems to be some WAF on the system. Some keywords we found to have this effect were `SELECT`, `FROM`, `UNION`, `SLEEP`, and then also space and `+`. We spent many hours trying manual attacks and `sqlmap` on the form, but with no luck.
 
 At some point we realised that we could also pass the login parameters through query params using GET. This seemed to be blocked by the same WAF, and we didn't imagine the two methods would be implemented differently. After more time than we care to admit, one of our members had the brilliant idea to fuzz the login via GET anyway, again using `sqlmap`:
 
@@ -117,7 +117,7 @@ In `/var/www/html/con.php` we find the following database credentials:
 
 ![Connection Credentials]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221211035549.png)
 
-`nissedev` is a lazy dev and have reused those parameters for their SSH access, giving us access to their account and the second flag:
+`nissedev` is a lazy dev and have reused those credentials for their SSH access, giving us access to their account and the second flag:
 
 ![SSH Access]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221211040055.png)
 
@@ -135,12 +135,12 @@ It has setuid file capabilities, so this is definitely something we should look 
 
 ![Setuid Capabilities]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221211041256.png)
 
-This means it can run commands as any user, so this binary is very likely the way forwards.
+This means it can run commands as any user, so this binary is very likely the way forward.
 We download it to our box and toss it into Ghidra:
 
 ![Decompiled Binary]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221211040632.png)
 
-So, this first checks if at least two command line arguments have been passed to the binary.
+This first checks if at least two command line arguments have been passed to the binary.
 The first one can be anything, but the second must be `NissedevErGenial`. If this is the case, it checks the uid of the current user.
 If it is `1001 (nissedev)`, then it sets the uid to `1000 (nisserik)` and runs `/home/nissedev/bash`, giving us shell as user `nisserik`:
 
@@ -156,7 +156,7 @@ If instead the binary is run as user `nisserik` and three command line arguments
 
 ![Privesc to Root]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/nissezonen/20221214132952.png)
 
-Ta-daaa! Now we just gotta grab the final flag!
+Ta-daaa! Now we just gotta grab the final flag, and we are done:
 
 ```
 nc3{Velkommen_i_nissezonen!!!}
@@ -164,7 +164,7 @@ nc3{Velkommen_i_nissezonen!!!}
 
 ## Note
 
-As mentioned, there was only SQLi when using GET. This server code should make it clear why:
+As mentioned, there was only SQLi when using GET. The server code should make it clear why:
 
 ```php
 include("con.php");
@@ -239,9 +239,9 @@ if (isset($_REQUEST["Username"]) && isset($_REQUEST["Password"])) {
 }
 ```
 
-This first does a very basic check for a few SQL keywords and dies if found. In addition, they added a check for whether the user agent contained `'sqlmap'`. Notice, however, that the end parenthesis is wrongly placed, so this filter does nothing and the check does not work - luckily for us. Otherwise, the `sqlmap` flag `--random-agent` should do the trick.
+This first does a very basic check for a few SQL keywords and dies if found. In addition, they added a check for whether the user agent contains `'sqlmap'`. Notice, however, that the end parenthesis is wrongly placed, so this filter does nothing and the check does not work - luckily for us. Otherwise, the `sqlmap` flag `--random-agent` should do the trick.
 
 Most importantly, there is two completely different handlers implemented for `GET` and `POST`, and the `POST` handler seems correctly implemented. The `GET` handler has a clear SQLi vulnerability in the username field, as this is injected directly into the query string. This goes for the password field too, but that is hashed before insertion, so that is not vulnerable.
 
 
-***Writeup by N1z0ku from Brunnerne***
+***Writeup by N1z0ku and Nissen***
