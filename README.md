@@ -4,7 +4,7 @@ This is a collection of writeups for various CTFs, formatted using [The Hacker C
 
 *Run the script -> Write in markdown -> Push commit -> The site is generated automatically*
 
-The site is running [here](https://Nissen96.github.io)
+The site is running [here](https://Nissen96.github.io/CTF-writeups/)
 
 *Some useful snippets for markdown included in the template project:*
 
