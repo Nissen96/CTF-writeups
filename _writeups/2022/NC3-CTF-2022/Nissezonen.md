@@ -14,7 +14,7 @@ date: 2022-12-13
 description: |-
     Man kan da ikke have en julectf uden en boot2root... Nisserne har hyret en ny udvikler til at sikre deres server for sårbarheder, hack serveren og se om han er sin vægt værd i gløgg.
 
-    Opgaven kan tilgås her: https://tryhackme.com/jr/nissezonen. Start derefter maskinen og få tildelt dens IP-adresse.
+    Opgaven kan tilgås her: [Nissezonen](https://tryhackme.com/jr/nissezonen). Start derefter maskinen og få tildelt dens IP-adresse.
 flag: <br>nc3{1-0_over_nissedev!}<br>nc3{nissedev_er_taget_paa_juleferie}<br>nc3{To_nisser_men_ingen_gloegg}<br>nc3{Velkommen_i_nissezonen!!!}<br>
 ---
 <details>
