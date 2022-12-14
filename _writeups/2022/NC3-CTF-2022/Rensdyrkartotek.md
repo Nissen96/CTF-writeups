@@ -137,7 +137,7 @@ Billederne er primært af landeflag og nogle rensdyr, men det ville være noget 
 
 ## Analyse
 
-Hvis vi skal kunne parse databasefilen, skal vi finde ud af, hvorfor den ikke identificeres korrekt af `file` og ikke læses rigtig ind af `sqlite3`. `file` kigger primært på headers og footers og tjekker magic bytes og evt. metadata. Det er derfor ikke usandsynligt, at noget er galt i starten af filen. For at tjekke det, må vi have fat i specifikationen: https://www.sqlite.org/fileformat.html.
+Hvis vi skal kunne parse databasefilen, skal vi finde ud af, hvorfor den ikke identificeres korrekt af `file` og ikke læses rigtig ind af `sqlite3`. `file` kigger primært på headers og footers og tjekker magic bytes og evt. metadata. Det er derfor ikke usandsynligt, at noget er galt i starten af filen. For at tjekke det, må vi have fat i specifikationen: [https://www.sqlite.org/fileformat.html](https://www.sqlite.org/fileformat.html).
 
 Her finder vi følgende tabel for database headeren:
 
@@ -158,7 +158,7 @@ Page size skal altså sættes til `0x10000 / 0x10 = 0x1000` (4096):
 
 ![Header Fixed]({{ site.baseurl }}/assets/CTFs/2022/NC3-CTF-2022/header-after.png)
 
-Køres `file` igen nu, får vi helt andet output:
+0Køres `file` igen nu, får vi helt andet output:
 
 
 ```sh
